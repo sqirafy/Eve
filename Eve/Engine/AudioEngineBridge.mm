@@ -38,4 +38,8 @@
     return _engine ? _engine->isBlackHoleConnected() : NO;
 }
 
+- (BOOL)hasDemand {
+    return _engine ? _engine->hasDemand() : NO;
+}
+
 @end

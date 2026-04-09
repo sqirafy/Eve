@@ -39,6 +39,7 @@ public:
     void stop();
     bool isRunning() const;
     bool isBlackHoleConnected() const;
+    bool hasDemand() const;
 
     /// Switch between passthrough (no inference) and active denoising on the fly.
     void setPassthrough(bool passthrough);

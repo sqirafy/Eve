@@ -16,7 +16,7 @@ struct EveApp: App {
             MenuBarView()
                 .environment(appState)
         } label: {
-            StatusIcon(isActive: appState.status == .processing || appState.status == .bypassing)
+            StatusIcon(status: appState.status)
         }
         .menuBarExtraStyle(.window)
     }

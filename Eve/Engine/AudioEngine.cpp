@@ -97,6 +97,10 @@ bool AudioEngine::isBlackHoleConnected() const {
     return blackhole_output_ && blackhole_output_->isRunning();
 }
 
+bool AudioEngine::hasDemand() const {
+    return has_demand_.load(std::memory_order_acquire);
+}
+
 void AudioEngine::setPassthrough(bool passthrough) {
     if (worker_) worker_->setPassthrough(passthrough);
 }

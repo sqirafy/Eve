@@ -20,7 +20,7 @@
       },
       {
         "comment": "",
-        "key": "Set BlackHole 2ch as your mic input in System Settings → Sound and in Zoom, Teams, etc.",
+        "key": "Set BlackHole 2ch as your mic input in Zoom, Teams, etc. to receive filtered audio.",
         "location": {
           "startingColumn": 18,
           "startingLine": 51
@@ -28,10 +28,18 @@
       },
       {
         "comment": "",
+        "key": "Set BlackHole 2ch as your mic input in System Settings → Sound and in Zoom, Teams, etc.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
         "key": "Physical Microphone",
         "location": {
           "startingColumn": 14,
-          "startingLine": 64
+          "startingLine": 71
         }
       },
       {
@@ -39,7 +47,7 @@
         "key": "No microphones found",
         "location": {
           "startingColumn": 18,
-          "startingLine": 78
+          "startingLine": 85
         }
       },
       {
@@ -47,7 +55,7 @@
         "key": "Microphone access denied",
         "location": {
           "startingColumn": 19,
-          "startingLine": 72
+          "startingLine": 79
         }
       },
       {
@@ -55,7 +63,7 @@
         "key": "Noise Suppression",
         "location": {
           "startingColumn": 19,
-          "startingLine": 113
+          "startingLine": 120
         }
       }
     ]

@@ -9,8 +9,9 @@ import Observation
 
 enum EngineStatus {
     case idle
-    case bypassing   // engine running, passthrough (toggle off)
-    case processing  // engine running, denoising active (toggle on)
+    case bypassing        // engine running, passthrough — toggle is OFF
+    case processingIdle   // inference enabled, waiting for an app to open BlackHole
+    case processingActive // inference enabled AND an app is actively reading BlackHole
     case error
     case noMicAccess
     case noBlackHole
@@ -53,7 +54,11 @@ final class AppState {
         if engine.isRunning {
             // Engine already running: switch mode without restarting.
             engine.setPassthrough(!enabled)
-            status = enabled ? .processing : .bypassing
+            if enabled {
+                status = engine.hasDemand ? .processingActive : .processingIdle
+            } else {
+                status = .bypassing
+            }
         } else {
             // Engine not yet started: start it (always begins in passthrough until enabled).
             startEngine()
@@ -80,7 +85,7 @@ final class AppState {
             lastKnownMicID = micID
             // Start in passthrough; inference only active when the toggle is on.
             engine.setPassthrough(!isEnabled)
-            status = isEnabled ? .processing : .bypassing
+            status = isEnabled ? .processingIdle : .bypassing
         } else {
             status = .noBlackHole
         }
@@ -104,7 +109,12 @@ final class AppState {
             if !self.engine.isRunning && self.micPermission.status == .granted && self.modelLoaded {
                 self.startEngine()
             }
-            if self.isEnabled && !self.engine.isRunning { self.status = .error }
+            if self.isEnabled && !self.engine.isRunning { self.status = .error; return }
+
+            // Refresh demand state so the icon updates when an app opens/closes BlackHole.
+            if self.isEnabled && self.engine.isRunning {
+                self.status = self.engine.hasDemand ? .processingActive : .processingIdle
+            }
         }
     }
 }

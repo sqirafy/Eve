@@ -47,7 +47,14 @@ struct MenuBarView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 12)
                 .padding(.bottom, 4)
-        } else if appState.status == .processing {
+        } else if appState.status == .processingIdle {
+            Text("Set BlackHole 2ch as your mic input in Zoom, Teams, etc. to receive filtered audio.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 4)
+        } else if appState.status == .processingActive {
             Text("Set BlackHole 2ch as your mic input in System Settings → Sound and in Zoom, Teams, etc.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -122,23 +129,25 @@ struct MenuBarView: View {
 
     private var statusColor: Color {
         switch appState.status {
-        case .idle:        return .gray
-        case .bypassing:   return .gray
-        case .processing:  return .green
-        case .error:       return .red
-        case .noMicAccess: return .orange
-        case .noBlackHole: return .orange
+        case .idle:              return .secondary
+        case .bypassing:         return Color(red: 0.94, green: 0.74, blue: 0.12)
+        case .processingIdle:    return Color(red: 0.56, green: 0.83, blue: 0.65)
+        case .processingActive:  return Color(red: 0.18, green: 0.78, blue: 0.44)
+        case .error:             return .red
+        case .noMicAccess:       return .orange
+        case .noBlackHole:       return .orange
         }
     }
 
     private var statusText: String {
         switch appState.status {
-        case .idle:        return "Idle"
-        case .bypassing:   return "Passthrough"
-        case .processing:  return "Active"
-        case .error:       return "Error"
-        case .noMicAccess: return "No Mic Access"
-        case .noBlackHole: return "BlackHole Not Found"
+        case .idle:              return "Idle"
+        case .bypassing:         return "Passthrough"
+        case .processingIdle:    return "Ready"
+        case .processingActive:  return "Filtering"
+        case .error:             return "Error"
+        case .noMicAccess:       return "No Mic Access"
+        case .noBlackHole:       return "BlackHole Not Found"
         }
     }
 }

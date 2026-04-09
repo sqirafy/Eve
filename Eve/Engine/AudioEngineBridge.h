@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) BOOL isRunning;
 @property (nonatomic, readonly) BOOL isBlackHoleConnected;
+@property (nonatomic, readonly) BOOL hasDemand;
 
 @end
 
