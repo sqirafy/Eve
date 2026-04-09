@@ -1,0 +1,79 @@
+{
+  "" : {
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/Eve-primary.dia",
+    "emit-module-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/Eve-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/Eve-primary-emit-module.dia",
+    "pch" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/Eve-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/Eve-primary.swiftdeps"
+  },
+  "/Users/siphe/Projects/Eve/Eve/App/AppState.swift" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState.dia",
+    "index-unit-output-path" : "/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState.o",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState.swiftdeps",
+    "swiftmodule" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AppState~partial.swiftmodule"
+  },
+  "/Users/siphe/Projects/Eve/Eve/Audio/AudioDeviceManager.swift" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager.dia",
+    "index-unit-output-path" : "/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager.o",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager.swiftdeps",
+    "swiftmodule" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/AudioDeviceManager~partial.swiftmodule"
+  },
+  "/Users/siphe/Projects/Eve/Eve/Audio/MicrophonePermission.swift" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission.dia",
+    "index-unit-output-path" : "/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission.o",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission.swiftdeps",
+    "swiftmodule" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MicrophonePermission~partial.swiftmodule"
+  },
+  "/Users/siphe/Projects/Eve/Eve/EveApp.swift" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp.dia",
+    "index-unit-output-path" : "/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp.o",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp.swiftdeps",
+    "swiftmodule" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/EveApp~partial.swiftmodule"
+  },
+  "/Users/siphe/Projects/Eve/Eve/UI/MenuBarView.swift" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView.dia",
+    "index-unit-output-path" : "/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView.o",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView.swiftdeps",
+    "swiftmodule" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/MenuBarView~partial.swiftmodule"
+  },
+  "/Users/siphe/Projects/Eve/Eve/UI/StatusIcon.swift" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon.dia",
+    "index-unit-output-path" : "/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon.o",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon.swiftdeps",
+    "swiftmodule" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/StatusIcon~partial.swiftmodule"
+  },
+  "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/siphe/Projects/Eve/build/Eve.build/Debug/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

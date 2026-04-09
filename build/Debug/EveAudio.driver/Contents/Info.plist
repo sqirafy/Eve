@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BuildMachineOSBuild</key>
+	<string>24G624</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>EveAudio</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.eve.audiodriver</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>EveAudio</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundlePlugIn</key>
+	<dict>
+		<key>CFPlugInDynamicRegistration</key>
+		<string>NO</string>
+		<key>CFPlugInFactories</key>
+		<dict>
+			<key>2B51C94E-7E2F-4F85-B2B0-B0ADD00F5A49</key>
+			<string>EveAudioDriverCreate</string>
+		</dict>
+		<key>CFPlugInTypes</key>
+		<dict>
+			<key>443ABCAB-EB73-11D5-9460-0030656D852C</key>
+			<array>
+				<string>2B51C94E-7E2F-4F85-B2B0-B0ADD00F5A49</string>
+			</array>
+		</dict>
+	</dict>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>MacOSX</string>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>DTCompiler</key>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
+	<key>DTPlatformBuild</key>
+	<string>25C58</string>
+	<key>DTPlatformName</key>
+	<string>macosx</string>
+	<key>DTPlatformVersion</key>
+	<string>26.2</string>
+	<key>DTSDKBuild</key>
+	<string>25C58</string>
+	<key>DTSDKName</key>
+	<string>macosx26.2</string>
+	<key>DTXcode</key>
+	<string>2630</string>
+	<key>DTXcodeBuild</key>
+	<string>17C529</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>15.7</string>
+</dict>
+</plist>

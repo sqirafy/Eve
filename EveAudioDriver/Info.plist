@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>EveAudio</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.eve.audiodriver</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>EveAudio</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<!-- CFBundlePlugIn tells CoreFoundation how to instantiate this AudioServerPlugIn.
+	     Factory UUID 2B51C94E-... maps to EveAudioDriverCreate() in the binary.
+	     Type UUID 443ABCAB-... is kAudioServerPlugInTypeUUID from AudioServerPlugIn.h. -->
+	<key>CFBundlePlugIn</key>
+	<dict>
+		<key>CFPlugInDynamicRegistration</key>
+		<string>NO</string>
+		<key>CFPlugInFactories</key>
+		<dict>
+			<key>2B51C94E-7E2F-4F85-B2B0-B0ADD00F5A49</key>
+			<string>EveAudioDriverCreate</string>
+		</dict>
+		<key>CFPlugInTypes</key>
+		<dict>
+			<key>443ABCAB-EB73-11D5-9460-0030656D852C</key>
+			<array>
+				<string>2B51C94E-7E2F-4F85-B2B0-B0ADD00F5A49</string>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>

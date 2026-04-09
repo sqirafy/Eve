@@ -1,0 +1,56 @@
+{
+  "source": "/Users/siphe/Projects/Eve/Eve/UI/MenuBarView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Quit Eve",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 31
+        }
+      },
+      {
+        "comment": "",
+        "key": "Input Device",
+        "location": {
+          "startingColumn": 14,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "No input devices found",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 76
+        }
+      },
+      {
+        "comment": "",
+        "key": "Microphone access denied",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 70
+        }
+      },
+      {
+        "comment": "",
+        "key": "%d app%@",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 51
+        }
+      },
+      {
+        "comment": "",
+        "key": "Noise Suppression",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 111
+        }
+      }
+    ]
+  },
+  "version": 1
+}
