@@ -2,6 +2,7 @@
 #include "SPSCRingBuffer.hpp"
 #include <cstring>
 #include <algorithm>
+#include <dispatch/dispatch.h>
 
 namespace eve {
 
@@ -135,12 +136,14 @@ bool AudioCapture::start(AudioDeviceID deviceID, Float64 targetSampleRate) {
     }
 
     running_.store(true, std::memory_order_release);
+    installSampleRateListener();
     return true;
 }
 
 void AudioCapture::stop() {
     if (!running_.load(std::memory_order_acquire)) return;
 
+    removeSampleRateListener();
     running_.store(false, std::memory_order_release);
 
     if (device_id_ != kAudioObjectUnknown && io_proc_id_) {
@@ -199,6 +202,61 @@ OSStatus AudioCapture::ioProc(AudioDeviceID /*device*/,
 
     // Signal the inference worker that new samples are available.
     if (self->notify_cb_) self->notify_cb_(self->notify_ctx_);
+
+    return noErr;
+}
+
+// ---------------------------------------------------------------------------
+// Sample rate change listener
+// ---------------------------------------------------------------------------
+
+void AudioCapture::installSampleRateListener() {
+    if (device_id_ == kAudioObjectUnknown) return;
+    AudioObjectPropertyAddress prop = {
+        kAudioDevicePropertyNominalSampleRate,
+        kAudioObjectPropertyScopeGlobal,
+        kAudioObjectPropertyElementMain
+    };
+    AudioObjectAddPropertyListener(device_id_, &prop, sampleRateChangedCallback, this);
+}
+
+void AudioCapture::removeSampleRateListener() {
+    if (device_id_ == kAudioObjectUnknown) return;
+    AudioObjectPropertyAddress prop = {
+        kAudioDevicePropertyNominalSampleRate,
+        kAudioObjectPropertyScopeGlobal,
+        kAudioObjectPropertyElementMain
+    };
+    AudioObjectRemovePropertyListener(device_id_, &prop, sampleRateChangedCallback, this);
+}
+
+OSStatus AudioCapture::sampleRateChangedCallback(
+    AudioObjectID /*inObjectID*/, UInt32 /*inNumberAddresses*/,
+    const AudioObjectPropertyAddress* /*inAddresses*/, void* inClientData)
+{
+    auto* self = static_cast<AudioCapture*>(inClientData);
+
+    // The callback fires on a CoreAudio thread. Restart capture on a background
+    // queue so we can safely tear down and re-create the IO proc.
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        if (!self->running_.load(std::memory_order_acquire)) return;
+
+        const AudioDeviceID deviceID      = self->device_id_;
+        const Float64       targetRate    = self->target_sample_rate_;
+        SPSCRingBuffer<float>* outputBuf  = self->output_buffer_;
+        NotifyCallback      notifyCb      = self->notify_cb_;
+        void*               notifyCtx     = self->notify_ctx_;
+
+        // Tear down the current IO proc (removeSampleRateListener is called
+        // inside stop(), which will try to remove the listener we're currently
+        // inside — that's safe per CoreAudio docs).
+        self->stop();
+
+        // Reconfigure the device and restart with the same parameters.
+        self->setOutputBuffer(outputBuf);
+        self->setNotifyCallback(notifyCb, notifyCtx);
+        self->start(deviceID, targetRate);
+    });
 
     return noErr;
 }

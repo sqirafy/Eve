@@ -54,6 +54,13 @@ private:
     /// Configure the device buffer size for low latency.
     bool configureDevice(AudioDeviceID deviceID, Float64 targetSampleRate);
 
+    void installSampleRateListener();
+    void removeSampleRateListener();
+
+    static OSStatus sampleRateChangedCallback(
+        AudioObjectID inObjectID, UInt32 inNumberAddresses,
+        const AudioObjectPropertyAddress* inAddresses, void* inClientData);
+
     AudioDeviceID device_id_ = kAudioObjectUnknown;
     AudioDeviceIOProcID io_proc_id_ = nullptr;
     SPSCRingBuffer<float>* output_buffer_ = nullptr;
