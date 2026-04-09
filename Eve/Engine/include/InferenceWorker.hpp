@@ -72,11 +72,10 @@ private:
     std::atomic<bool> passthrough_{true};   // start in passthrough; caller sets false for inference
     std::atomic<bool> demand_{false};        // true when a client app is reading from BlackHole
 
-    // Internal frame assembly buffer.
-    // We accumulate kFrameSamples (960) for the first frame,
-    // then shift by kHopSamples (480) for subsequent frames (50% overlap).
+    // Internal frame assembly buffers — pre-allocated, never heap-allocated in hot path.
     float frame_buffer_[kFrameSamples] = {};
-    float hop_output_[kHopSamples] = {};
+    float hop_output_[kHopSamples]     = {};
+    float hop_accum_[kHopSamples]      = {};
     size_t frame_fill_ = 0;
     bool first_frame_ = true;
 };

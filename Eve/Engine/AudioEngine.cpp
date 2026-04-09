@@ -129,13 +129,11 @@ void AudioEngine::startDemandMonitoring() {
     };
     AudioObjectAddPropertyListener(blackhole_id_, &prop, demandPropertyListener, this);
 
-    // NOTE: We don't eagerly check DeviceIsRunningSomewhere here because our
-    // own IO proc (if any residual state) could make it report true falsely.
-    // The property listener will fire when an external app opens BlackHole.
-    //
-    // Auto-stop is intentionally omitted: fully stopping/restarting the IO proc
-    // to probe for external clients causes audible clicks. Once demand starts,
-    // inference runs until the user toggles it off. The CPU cost is acceptable.
+    // NOTE: Auto-stop via periodic IO proc stop/check/restart is intentionally
+    // omitted. BlackHole is a zero-latency loopback with no internal buffering —
+    // stopping our output IO proc even briefly causes an audible click in any app
+    // reading from BlackHole's input side. The property listener above handles
+    // auto-start cleanly. Use the noise suppression toggle to stop inference.
 }
 
 void AudioEngine::stopDemandMonitoring() {

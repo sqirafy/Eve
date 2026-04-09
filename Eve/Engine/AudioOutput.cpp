@@ -1,6 +1,7 @@
 #include "AudioOutput.hpp"
 #include "SPSCRingBuffer.hpp"
 
+#include <Accelerate/Accelerate.h>
 #include <algorithm>
 #include <cctype>
 #include <cstring>
@@ -142,17 +143,31 @@ OSStatus AudioOutput::ioProc(AudioDeviceID /*device*/,
     }
 
     // Pop mono samples from the processed ring buffer.
-    float mono[2048];
-    const UInt32 safe = std::min(frameCount, UInt32(2048));
+    // kMaxFrames matches the buffer frame size set in AudioCapture::configureDevice (256),
+    // with headroom for devices that request up to 512 frames.
+    static constexpr UInt32 kMaxFrames = 512;
+    float mono[kMaxFrames];
+    const UInt32 safe = std::min(frameCount, kMaxFrames);
     const size_t got  = self->input_buffer_->pop(mono, safe);
 
     // Zero-fill any gap (inference thread not yet warm).
     if (got < safe) std::memset(mono + got, 0, (safe - got) * sizeof(float));
 
-    // Broadcast mono → all output channels (BlackHole-2ch is stereo).
-    for (UInt32 f = 0; f < safe; ++f) {
-        for (UInt32 c = 0; c < channels; ++c) {
-            dst[f * channels + c] = mono[f];
+    // Broadcast mono → all output channels using vDSP for efficiency.
+    if (channels == 1) {
+        std::memcpy(dst, mono, safe * sizeof(float));
+    } else if (channels == 2) {
+        // Interleave mono into stereo: dst = [L0,R0, L1,R1, ...]
+        // vDSP_vsadd with stride writes mono[i] into every channels-th slot.
+        vDSP_vclr(dst, 1, safe * channels);
+        vDSP_vadd(mono, 1, dst,      channels, dst,      channels, safe);
+        vDSP_vadd(mono, 1, dst + 1,  channels, dst + 1,  channels, safe);
+    } else {
+        // General case for > 2 channels.
+        for (UInt32 f = 0; f < safe; ++f) {
+            const float s = mono[f];
+            for (UInt32 c = 0; c < channels; ++c)
+                dst[f * channels + c] = s;
         }
     }
 

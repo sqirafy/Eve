@@ -123,8 +123,14 @@ private:
     std::unique_ptr<T[]> buffer_;
 
     // Cache-line aligned to prevent false sharing between producer and consumer.
+    // ARM64 (Apple Silicon) has 128-byte cache lines; x86_64 has 64-byte.
+#if defined(__aarch64__)
+    alignas(128) std::atomic<size_t> write_pos_;
+    alignas(128) std::atomic<size_t> read_pos_;
+#else
     alignas(64) std::atomic<size_t> write_pos_;
     alignas(64) std::atomic<size_t> read_pos_;
+#endif
 };
 
 } // namespace eve

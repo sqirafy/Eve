@@ -29,6 +29,10 @@ final class AppState {
     private var modelLoaded = false
     private var lastKnownMicID: AudioDeviceID? = nil
 
+    deinit {
+        statusTimer?.invalidate()
+    }
+
     init() {
         loadModel()
         requestMicPermissionIfNeeded()
@@ -83,7 +87,7 @@ final class AppState {
     }
 
     private func startStatusPolling() {
-        statusTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+        statusTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
 
             // Restart engine if the selected device changed under us (e.g. USB mic unplugged,

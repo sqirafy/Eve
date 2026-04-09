@@ -74,9 +74,6 @@ private:
     Float64 actual_sample_rate_ = 48000.0;
     UInt32 device_channels_ = 1;
 
-    // Intermediate buffer for sample rate conversion
-    static constexpr size_t kMaxConvertFrames = 4096;
-    float convert_buffer_[kMaxConvertFrames] = {};
 
     std::atomic<bool> running_{false};
 };

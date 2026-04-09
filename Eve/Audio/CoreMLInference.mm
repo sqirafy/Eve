@@ -1,17 +1,20 @@
-// CoreMLInference.mm — CoreML inference backend (dpdfnet2 16 kHz, FP16 weights)
+// CoreMLInference.mm — CoreML inference backend (DPDFNet2 16 kHz, stateful MLState)
 // Audio pipeline: 48 kHz capture → 3:1 downsample → 16 kHz model → 3:1 upsample → 48 kHz output.
 //
-// Model I/O (DPDFNet2_16kHz.mlmodelc):
-//   Input  "spec":     [1, 1, 161, 2]  — real/imag stacked spectrogram (16 kHz)
-//   Input  "state_in": [45424]          — flattened GRU/DPRNN hidden state
-//   Output "spec_e":   [1, 1, 161, 2]  — enhanced spectrogram
-//   Output "state_out":[45424]          — updated state
+// Model I/O (DPDFNet2_16kHz.mlpackage — stateful):
+//   Input  "spec":  [1, 1, 161, 2]  — real/imag stacked spectrogram (16 kHz)
+//   Output "spec_e":[1, 1, 161, 2]  — enhanced spectrogram
+//   State  "state": [45424]          — GRU/DPRNN hidden state (managed by MLState)
+//
+// The state lives inside CoreML MLState — no CPU copies per frame. Initial values
+// (ERB norm + spec norm) are embedded in the model buffer; runtime DPDFNetInitState.h
+// is no longer needed.
 
 #import <CoreML/CoreML.h>
+#import <CoreML/MLModel+MLState.h>
 #import <Accelerate/Accelerate.h>
 
 #include "CoreMLInference.h"
-#include "DPDFNetInitState.h"
 
 #include <algorithm>
 #include <cmath>
@@ -124,29 +127,27 @@ static void irfft(const float* in_re, const float* in_im, int N, float* y,
 }
 
 // ---------------------------------------------------------------------------
-// Reusable MLFeatureProvider
+// Reusable MLFeatureProvider — spec only (state managed by MLState)
 // ---------------------------------------------------------------------------
 @interface EveFeatureProvider : NSObject <MLFeatureProvider>
-- (instancetype)initWithSpec:(MLMultiArray*)spec stateIn:(MLMultiArray*)stateIn;
+- (instancetype)initWithSpec:(MLMultiArray*)spec;
 @end
 
 @implementation EveFeatureProvider {
-    MLMultiArray* _spec;
-    MLMultiArray* _stateIn;
-    NSSet<NSString*>* _names;
+    MLMultiArray*       _spec;
+    NSSet<NSString*>*   _names;
 }
-- (instancetype)initWithSpec:(MLMultiArray*)spec stateIn:(MLMultiArray*)stateIn {
+- (instancetype)initWithSpec:(MLMultiArray*)spec {
     self = [super init];
     if (self) {
-        _spec = spec; _stateIn = stateIn;
-        _names = [NSSet setWithObjects:@"spec", @"state_in", nil];
+        _spec  = spec;
+        _names = [NSSet setWithObject:@"spec"];
     }
     return self;
 }
 - (NSSet<NSString*>*)featureNames { return _names; }
 - (MLFeatureValue*)featureValueForName:(NSString*)name {
-    if ([name isEqualToString:@"spec"])     return [MLFeatureValue featureValueWithMultiArray:_spec];
-    if ([name isEqualToString:@"state_in"]) return [MLFeatureValue featureValueWithMultiArray:_stateIn];
+    if ([name isEqualToString:@"spec"]) return [MLFeatureValue featureValueWithMultiArray:_spec];
     return nil;
 }
 @end
@@ -155,13 +156,12 @@ static void irfft(const float* in_re, const float* in_im, int N, float* y,
 // Model context
 // ---------------------------------------------------------------------------
 struct EveModelContextImpl {
-    MLModel*            model;
+    MLModel*             model;
+    MLState*             ml_state;       // CoreML manages GRU state on-device
     EveFeatureProvider*  feature_provider;
-    MLMultiArray*       spec_array;
-    MLMultiArray*       state_in_array;
+    MLMultiArray*        spec_array;
 
     std::vector<float> spec_buf;   // [kFreqBins * 2]
-    std::vector<float> state;      // [kStateSize]
 
     // SRC history
     std::vector<float> ds_history;
@@ -184,10 +184,12 @@ struct EveModelContextImpl {
     std::vector<float> ds_scratch;  // [kSRCFilterLen - 1 + kWinLen48]
     std::vector<float> us_scratch;  // [kSRCFilterLen - 1 + kHopSize48]
 
+    // Pre-allocated FP16→FP32 conversion buffer for spec_e output.
+    std::vector<float> spec_e_f32;  // [kFreqBins * 2]
+
     EveModelContextImpl(const char* model_path_utf8)
-        : model(nil), feature_provider(nil), spec_array(nil), state_in_array(nil)
+        : model(nil), ml_state(nil), feature_provider(nil), spec_array(nil)
         , spec_buf(kFreqBins * 2, 0.0f)
-        , state(kStateSize, 0.0f)
         , ds_history(kSRCFilterLen - 1, 0.0f)
         , us_history(kSRCFilterLen - 1, 0.0f)
         , frame16(kWinLen16, 0.0f)
@@ -202,18 +204,17 @@ struct EveModelContextImpl {
         , time16(kWinLen16)
         , ds_scratch(kSRCFilterLen - 1 + kWinLen48, 0.0f)
         , us_scratch(kSRCFilterLen - 1 + kHopSize48, 0.0f)
+        , spec_e_f32(kFreqBins * 2, 0.0f)
     {
         build_vorbis_window(window16.data(), kWinLen16);
-
-        std::copy(kErbNormInit,  kErbNormInit  + kErbNormStateSize,  state.data());
-        std::copy(kSpecNormInit, kSpecNormInit + kSpecNormStateSize,
-                  state.data() + kErbNormStateSize);
 
         NSString* path = [NSString stringWithUTF8String:model_path_utf8];
         NSURL*    url  = [NSURL fileURLWithPath:path];
 
         MLModelConfiguration* cfg = [[MLModelConfiguration alloc] init];
-        cfg.computeUnits = MLComputeUnitsAll;
+        // CPU_AND_NE: optimal for M-series streaming model (batch=1, sequential GRU).
+        // ANE handles matmul/conv; CPU handles residual ops. Avoids GPU overhead.
+        cfg.computeUnits = MLComputeUnitsCPUAndNeuralEngine;
 
         NSError* err = nil;
         model = [MLModel modelWithContentsOfURL:url configuration:cfg error:&err];
@@ -221,6 +222,12 @@ struct EveModelContextImpl {
             NSString* msg = err ? err.localizedDescription : @"unknown error";
             throw std::runtime_error(std::string("CoreML load failed: ") + msg.UTF8String);
         }
+
+        // Create MLState — CoreML initialises it with the embedded initial values
+        // (ERB norm + spec norm + GRU zeros) from the model buffer.
+        ml_state = [model newState];
+        if (!ml_state)
+            throw std::runtime_error("MLState creation failed");
 
         NSArray<NSNumber*>* spec_shape   = @[@1, @1, @(kFreqBins), @2];
         NSArray<NSNumber*>* spec_strides = @[@(kFreqBins * 2), @(kFreqBins * 2), @2, @1];
@@ -230,14 +237,17 @@ struct EveModelContextImpl {
                         strides:spec_strides deallocator:nil error:&err];
         if (!spec_array) throw std::runtime_error("MLMultiArray spec alloc failed");
 
-        state_in_array = [[MLMultiArray alloc]
-            initWithDataPointer:state.data() shape:@[@(kStateSize)]
-                       dataType:MLMultiArrayDataTypeFloat32
-                        strides:@[@1] deallocator:nil error:&err];
-        if (!state_in_array) throw std::runtime_error("MLMultiArray state_in alloc failed");
+        feature_provider = [[EveFeatureProvider alloc] initWithSpec:spec_array];
 
-        feature_provider = [[EveFeatureProvider alloc]
-            initWithSpec:spec_array stateIn:state_in_array];
+        // Warmup: one dummy prediction to let the ANE/CPU compile and cache the
+        // compute graph. Discards the output — this only primes the hardware.
+        id<MLFeatureProvider> warmup_result =
+            [model predictionFromFeatures:feature_provider
+                               usingState:ml_state
+                                    error:&err];
+        (void)warmup_result;
+        // Reset MLState so the first real frame starts from a fresh initial state.
+        ml_state = [model newState];
     }
 };
 
@@ -291,85 +301,80 @@ int eve_model_predict(const float* input, float* output, void* context) {
     if (!context || !input || !output) return -1;
     auto* ctx = static_cast<EveModelContextImpl*>(context);
 
-    @autoreleasepool {
-        // 1. Downsample 48 kHz → 16 kHz
-        downsample3(input, kWinLen48, ctx->ds_history, ctx->ds_scratch,
-                    ctx->frame16.data(), kWinLen16);
+    // NOTE: No per-call @autoreleasepool. The caller (InferenceWorker::threadFunc)
+    // wraps its entire lifetime in an autoreleasepool, which drains on thread exit.
 
-        // 2. Analysis: vorbis window → rfft
-        vDSP_vmul(ctx->frame16.data(), 1, ctx->window16.data(), 1,
-                  ctx->windowed16.data(), 1, kWinLen16);
+    // 1. Downsample 48 kHz → 16 kHz
+    downsample3(input, kWinLen48, ctx->ds_history, ctx->ds_scratch,
+                ctx->frame16.data(), kWinLen16);
 
-        rfft(ctx->windowed16.data(), kWinLen16,
-             ctx->dft_re, ctx->dft_im, ctx->idft_re, ctx->idft_im,
-             ctx->dft16.fwd);
+    // 2. Analysis: vorbis window → rfft
+    vDSP_vmul(ctx->frame16.data(), 1, ctx->window16.data(), 1,
+              ctx->windowed16.data(), 1, kWinLen16);
 
-        float* spec = ctx->spec_buf.data();
-        for (int k = 0; k < kFreqBins; ++k) {
-            spec[k * 2 + 0] = ctx->idft_re[k];
-            spec[k * 2 + 1] = ctx->idft_im[k];
-        }
+    rfft(ctx->windowed16.data(), kWinLen16,
+         ctx->dft_re, ctx->dft_im, ctx->idft_re, ctx->idft_im,
+         ctx->dft16.fwd);
 
-        // 3. CoreML inference
-        NSError* err = nil;
-        id<MLFeatureProvider> result =
-            [ctx->model predictionFromFeatures:ctx->feature_provider error:&err];
-        if (!result) return -2;
-
-        MLMultiArray* spec_e_arr    = [result featureValueForName:@"spec_e"].multiArrayValue;
-        MLMultiArray* state_out_arr = [result featureValueForName:@"state_out"].multiArrayValue;
-        if (!spec_e_arr || !state_out_arr) return -3;
-
-        // FP16 models may return Float16 MLMultiArrays in release builds.
-        // Use MLMultiArray subscript accessors which handle type conversion,
-        // or convert manually when dataType is Float16.
-        const int spec_e_count = kFreqBins * 2;
-        float spec_e_f32[spec_e_count];
-        if (spec_e_arr.dataType == MLMultiArrayDataTypeFloat16) {
-            const __fp16* p = static_cast<const __fp16*>(spec_e_arr.dataPointer);
-            for (int i = 0; i < spec_e_count; ++i) spec_e_f32[i] = static_cast<float>(p[i]);
-        } else {
-            std::memcpy(spec_e_f32, spec_e_arr.dataPointer, spec_e_count * sizeof(float));
-        }
-        const float* spec_e = spec_e_f32;
-
-        if (state_out_arr.dataType == MLMultiArrayDataTypeFloat16) {
-            const __fp16* p = static_cast<const __fp16*>(state_out_arr.dataPointer);
-            for (int i = 0; i < kStateSize; ++i) ctx->state[i] = static_cast<float>(p[i]);
-        } else {
-            const float* state_out_ptr = static_cast<const float*>(state_out_arr.dataPointer);
-            std::memcpy(ctx->state.data(), state_out_ptr, kStateSize * sizeof(float));
-        }
-
-        // 4. Synthesis: irfft → synthesis window → OLA
-        for (int k = 0; k < kFreqBins; ++k) {
-            ctx->enh_re[k] = spec_e[k * 2 + 0];
-            ctx->enh_im[k] = spec_e[k * 2 + 1];
-        }
-
-        irfft(ctx->enh_re.data(), ctx->enh_im.data(), kWinLen16,
-              ctx->time16.data(),
-              ctx->dft_re, ctx->dft_im, ctx->idft_re, ctx->idft_im,
-              ctx->dft16.inv);
-
-        vDSP_vmul(ctx->time16.data(), 1, ctx->window16.data(), 1,
-                  ctx->time16.data(), 1, kWinLen16);
-
-        vDSP_vadd(ctx->ola16.data(), 1, ctx->time16.data(), 1,
-                  ctx->ola16.data(), 1, kWinLen16);
-
-        std::copy(ctx->ola16.begin(), ctx->ola16.begin() + kHopSize16,
-                  ctx->hop16.begin());
-        std::copy(ctx->ola16.begin() + kHopSize16, ctx->ola16.end(),
-                  ctx->ola16.begin());
-        std::fill(ctx->ola16.end() - kHopSize16, ctx->ola16.end(), 0.0f);
-
-        // 5. Upsample 16 kHz → 48 kHz
-        upsample3(ctx->hop16.data(), kHopSize16, ctx->us_history, ctx->us_scratch,
-                  output, kHopSize48);
-
-        return 0;
+    float* spec = ctx->spec_buf.data();
+    for (int k = 0; k < kFreqBins; ++k) {
+        spec[k * 2 + 0] = ctx->idft_re[k];
+        spec[k * 2 + 1] = ctx->idft_im[k];
     }
+
+    // 3. CoreML stateful inference — state is updated in-place inside MLState.
+    NSError* err = nil;
+    id<MLFeatureProvider> result =
+        [ctx->model predictionFromFeatures:ctx->feature_provider
+                                usingState:ctx->ml_state
+                                     error:&err];
+    if (!result) return -2;
+
+    MLMultiArray* spec_e_arr = [result featureValueForName:@"spec_e"].multiArrayValue;
+    if (!spec_e_arr) return -3;
+
+    // FP16 compute precision: output is Float16 — convert to Float32 via SIMD.
+    const int spec_e_count = kFreqBins * 2;
+    float* spec_e = ctx->spec_e_f32.data();
+
+    if (spec_e_arr.dataType == MLMultiArrayDataTypeFloat16) {
+        vImage_Buffer src = { const_cast<void*>(spec_e_arr.dataPointer),
+                              1, (vImagePixelCount)spec_e_count, (size_t)spec_e_count * 2 };
+        vImage_Buffer dst = { spec_e, 1, (vImagePixelCount)spec_e_count,
+                              (size_t)spec_e_count * sizeof(float) };
+        vImageConvert_Planar16FtoPlanarF(&src, &dst, 0);
+    } else {
+        std::memcpy(spec_e, spec_e_arr.dataPointer, spec_e_count * sizeof(float));
+    }
+
+    // 4. Synthesis: irfft → synthesis window → OLA
+    for (int k = 0; k < kFreqBins; ++k) {
+        ctx->enh_re[k] = spec_e[k * 2 + 0];
+        ctx->enh_im[k] = spec_e[k * 2 + 1];
+    }
+
+    irfft(ctx->enh_re.data(), ctx->enh_im.data(), kWinLen16,
+          ctx->time16.data(),
+          ctx->dft_re, ctx->dft_im, ctx->idft_re, ctx->idft_im,
+          ctx->dft16.inv);
+
+    vDSP_vmul(ctx->time16.data(), 1, ctx->window16.data(), 1,
+              ctx->time16.data(), 1, kWinLen16);
+
+    vDSP_vadd(ctx->ola16.data(), 1, ctx->time16.data(), 1,
+              ctx->ola16.data(), 1, kWinLen16);
+
+    std::copy(ctx->ola16.begin(), ctx->ola16.begin() + kHopSize16,
+              ctx->hop16.begin());
+    std::copy(ctx->ola16.begin() + kHopSize16, ctx->ola16.end(),
+              ctx->ola16.begin());
+    std::fill(ctx->ola16.end() - kHopSize16, ctx->ola16.end(), 0.0f);
+
+    // 5. Upsample 16 kHz → 48 kHz
+    upsample3(ctx->hop16.data(), kHopSize16, ctx->us_history, ctx->us_scratch,
+              output, kHopSize48);
+
+    return 0;
 }
 
 void eve_model_unload(EveModelContext context) {

@@ -1,0 +1,64 @@
+{
+  "source": "/Users/siphe/Projects/Eve/Eve/UI/MenuBarView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Quit Eve",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "BlackHole 2ch not found. Install it and set it as your system mic input in System Settings → Sound.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 44
+        }
+      },
+      {
+        "comment": "",
+        "key": "Set BlackHole 2ch as your mic input in System Settings → Sound and in Zoom, Teams, etc.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 51
+        }
+      },
+      {
+        "comment": "",
+        "key": "Physical Microphone",
+        "location": {
+          "startingColumn": 14,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "No microphones found",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 78
+        }
+      },
+      {
+        "comment": "",
+        "key": "Microphone access denied",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 72
+        }
+      },
+      {
+        "comment": "",
+        "key": "Noise Suppression",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 113
+        }
+      }
+    ]
+  },
+  "version": 1
+}

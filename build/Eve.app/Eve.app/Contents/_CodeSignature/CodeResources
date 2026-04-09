@@ -6,23 +6,23 @@
 	<dict>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/analytics/coremldata.bin</key>
 		<data>
-		9keLPOsIDIDoZG3tQ1v7r2lNPXc=
+		qEOjr5VdBw26ECMsAsMu7PNg7jc=
 		</data>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/coremldata.bin</key>
 		<data>
-		A+Qwi0fgXNWJYzS/082Y+Lgv1qw=
+		mYtO12d2T2R9h0b32ZHEca3gd8U=
 		</data>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/metadata.json</key>
 		<data>
-		nYTdeZIQB0NCviUP7wA4UwmPanw=
+		1VuIyyFuaJ/ENrtWDbwuweyQXa8=
 		</data>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/model.mil</key>
 		<data>
-		T0D6Dj9NujS6ciW1N2NFDqmhJBA=
+		CpNE2PkublUWFeIpzCGfl3fi1kY=
 		</data>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/weights/weight.bin</key>
 		<data>
-		HmXCEiHmG65GOD8AFWjI9Chlw1M=
+		o3eGHRsblO9G3JlMYrT1zCvvhcg=
 		</data>
 		<key>Resources/DPDFNet2_48kHz.mlmodelc/analytics/coremldata.bin</key>
 		<data>
@@ -30,7 +30,7 @@
 		</data>
 		<key>Resources/DPDFNet2_48kHz.mlmodelc/coremldata.bin</key>
 		<data>
-		j9BjKo1+L8zyDtQDbYFPAJNRzgw=
+		QnkjjkB5nNA5j62otMy26C+QDGg=
 		</data>
 		<key>Resources/DPDFNet2_48kHz.mlmodelc/metadata.json</key>
 		<data>
@@ -55,35 +55,35 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			JNK/br1XGBUZR58ONDnfA3FvDlpHIRsG5MmBE/jUx2s=
+			BxQYSm+MbvvfiwakCHtJOul//2B5W//Ve74D5OJ6e1I=
 			</data>
 		</dict>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/coremldata.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			3qsB2Y47N+Zff8x+3TACge5ULhw8kAgChV/eWOUiKcI=
+			6N1X4epIa+hy6K8QjamvIkfe/PHKLJH0ky/4Ourd+Qc=
 			</data>
 		</dict>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/metadata.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			AVXmg+SrzkyvN0KKDMj1EWycYHc6vPE+uliv4oJHNs4=
+			HA8rDQ7eJYZ46oWVKQ2SAKqwc5GrkEULfQjeKER7UpU=
 			</data>
 		</dict>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/model.mil</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Jvppc6mR5ld42YNJ6xPR92w4NfwiV2dOZEpFA3BO4ZE=
+			GvpMNT5roZNMS0KBRNTdFmhdne780mH3MLJg/kkPA6A=
 			</data>
 		</dict>
 		<key>Resources/DPDFNet2_16kHz.mlmodelc/weights/weight.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			68UDtIKn4Blrs0Iv36sOA6Qu6TFT3pNkMnbrQwu6akc=
+			7of+dmLgLYxeY9hWMN627KWuPFgjgKcRcPMBbel5wks=
 			</data>
 		</dict>
 		<key>Resources/DPDFNet2_48kHz.mlmodelc/analytics/coremldata.bin</key>
@@ -97,7 +97,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			JzZ4k9UlRAGadVA4uoxRKhRDn2lOGUro4OgAlq6JI7I=
+			YCfNb9r/6dNN7i+bIdxsoyxrvFLZGU4V3joTZi6d/2Y=
 			</data>
 		</dict>
 		<key>Resources/DPDFNet2_48kHz.mlmodelc/metadata.json</key>

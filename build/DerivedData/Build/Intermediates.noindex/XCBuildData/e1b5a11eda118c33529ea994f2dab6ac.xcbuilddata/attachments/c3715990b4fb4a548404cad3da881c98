@@ -1,0 +1,56 @@
+{
+  "" : {
+    "const-values" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/Eve-primary.swiftconstvalues",
+    "dependencies" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/Eve-primary.d",
+    "diagnostics" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/Eve-primary.dia",
+    "emit-module-dependencies" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/Eve-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/Eve-primary-emit-module.dia",
+    "pch" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/Eve-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/Eve-primary.swiftdeps"
+  },
+  "/Users/siphe/Projects/Eve/Eve/App/AppState.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/AppState.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/AppState.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/AppState.o"
+  },
+  "/Users/siphe/Projects/Eve/Eve/Audio/AudioDeviceManager.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/AudioDeviceManager.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/AudioDeviceManager.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/AudioDeviceManager.o"
+  },
+  "/Users/siphe/Projects/Eve/Eve/Audio/MicrophonePermission.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/MicrophonePermission.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/MicrophonePermission.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/MicrophonePermission.o"
+  },
+  "/Users/siphe/Projects/Eve/Eve/EveApp.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/EveApp.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/EveApp.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/EveApp.o"
+  },
+  "/Users/siphe/Projects/Eve/Eve/UI/MenuBarView.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/MenuBarView.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/MenuBarView.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/MenuBarView.o"
+  },
+  "/Users/siphe/Projects/Eve/Eve/UI/StatusIcon.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/StatusIcon.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/StatusIcon.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/StatusIcon.o"
+  },
+  "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/DerivedSources/CoreMLGenerated/DPDFNet2_16kHz/DPDFNet2_16kHz.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/DPDFNet2_16kHz.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/DPDFNet2_16kHz.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/DPDFNet2_16kHz.o"
+  },
+  "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/DerivedSources/CoreMLGenerated/DPDFNet2_48kHz/DPDFNet2_48kHz.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/DPDFNet2_48kHz.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/DPDFNet2_48kHz.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/DPDFNet2_48kHz.o"
+  },
+  "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "index-unit-output-path" : "/Eve.build/Release/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/siphe/Projects/Eve/build/DerivedData/Build/Intermediates.noindex/Eve.build/Release/Eve.build/Objects-normal/arm64/GeneratedAssetSymbols.o"
+  }
+}
