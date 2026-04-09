@@ -27,6 +27,7 @@ final class AppState {
     private let engine = AudioEngineBridge()
     private var statusTimer: Timer?
     private var modelLoaded = false
+    private var lastKnownMicID: AudioDeviceID? = nil
 
     init() {
         loadModel()
@@ -72,6 +73,7 @@ final class AppState {
         guard let micID = deviceManager.selectedInputDeviceID else { status = .error; return }
 
         if engine.start(withMicDeviceID: micID) {
+            lastKnownMicID = micID
             // Start in passthrough; inference only active when the toggle is on.
             engine.setPassthrough(!isEnabled)
             status = isEnabled ? .processing : .bypassing
@@ -83,6 +85,17 @@ final class AppState {
     private func startStatusPolling() {
         statusTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             guard let self else { return }
+
+            // Restart engine if the selected device changed under us (e.g. USB mic unplugged,
+            // causing AudioDeviceManager to fall back to a different device).
+            if self.engine.isRunning,
+               let currentMic = self.deviceManager.selectedInputDeviceID,
+               currentMic != self.lastKnownMicID {
+                self.lastKnownMicID = currentMic
+                self.startEngine()
+                return
+            }
+
             // Auto-start engine once mic permission is granted (handles first-launch permission dialog).
             if !self.engine.isRunning && self.micPermission.status == .granted && self.modelLoaded {
                 self.startEngine()
